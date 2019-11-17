@@ -1,7 +1,9 @@
-import Home from './home';
-import About from './about';
+import HomePage from './home';
+import AboutPage from './about';
+import ArticleListPage from './article/article-list-page';
 
 export {
-  Home,
-  About,
+  HomePage,
+  AboutPage,
+  ArticleListPage,
 };

@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import DefaultLayout from './components/ui/layout';
 import {
-  Home, About,
+  HomePage, AboutPage, ArticleListPage,
 } from './pages';
 
 export default function App() {
@@ -14,11 +14,14 @@ export default function App() {
     <Router>
       <DefaultLayout>
         <Switch>
+          <Route path="/article/list">
+            <ArticleListPage />
+          </Route>
           <Route path="/about">
-            <About />
+            <AboutPage />
           </Route>
           <Route path="/">
-            <Home />
+            <HomePage />
           </Route>
         </Switch>
       </DefaultLayout>

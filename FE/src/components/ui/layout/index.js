@@ -9,7 +9,8 @@ const { Header, Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
 
 const NAV_MENUS = [
-  { name: 'Home', linkTo: '/home', icon: 'pie-chart' },
+  { name: 'Home', linkTo: '/', icon: 'pie-chart' },
+  { name: 'Article', linkTo: '/article/list', icon: 'desktop' },
   { name: 'About', linkTo: '/about', icon: 'desktop' }
 ];
 
