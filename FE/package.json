@@ -9,8 +9,8 @@
     "lint:js": "eslint -c .eslintrc.js --quiet --cache src/index.js"
   },
   "dependencies": {
-    "@material-ui/core": "^4.5.2",
-    "@material-ui/icons": "^4.5.1",
+    "antd": "^3.25.1",
+    "babel-plugin-import": "^1.12.2",
     "classnames": "^2.2.6",
     "prop-types": "^15.7.2",
     "react": "^16.11.0",
@@ -136,11 +136,6 @@
     "watchPlugins": [
       "jest-watch-typeahead/filename",
       "jest-watch-typeahead/testname"
-    ]
-  },
-  "babel": {
-    "presets": [
-      "react-app"
     ]
   }
 }
