@@ -1,9 +1,11 @@
+/* eslint-disable  */
 import React from 'react';
-import PropTypes from 'prop-types';
+import PropTypes, { nominalTypeHack } from 'prop-types';
+import { useLocation } from 'react-router-dom';
 import classNames from 'classnames';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import {
-  Drawer,
+  Drawer, Link, Button,
   AppBar, Toolbar, Divider, IconButton,
   List, ListItem, ListItemIcon, ListItemText, Typography,
 } from '@material-ui/core';
@@ -12,9 +14,13 @@ import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
+import { RouterNavLink } from '../../router-link';
 
+const NAV_MENUS = [
+  { name: 'Home', linkTo: '/home' },
+  { name: 'About', linkTo: '/about' }
+];
 const drawerWidth = 240;
-
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -69,12 +75,23 @@ const useStyles = makeStyles((theme) => ({
     }),
     marginLeft: 0,
   },
+  menuItem: {
+    padding: 0,
+  },
+  menuLink: {
+    width: '100%',
+    '&:hover': {
+      background: 'none',
+    }
+  },
 }));
 
 function DefaultLayout({ children }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const location = useLocation();
+  const { pathname } = location;
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -83,6 +100,8 @@ function DefaultLayout({ children }) {
   const handleDrawerClose = () => {
     setOpen(false);
   };
+
+  const isSelectedMenu = (menuLink) => menuLink === pathname;
 
   return (
     <div className={classes.root}>
@@ -123,6 +142,21 @@ function DefaultLayout({ children }) {
         </div>
         <Divider />
         <List>
+          {NAV_MENUS.map((menu) => (
+            <ListItem key={menu.name} className={classes.menuItem} disableGutters selected={isSelectedMenu(menu.linkTo)}>
+              <Button
+                className={classes.menuLink}
+                component={RouterNavLink}
+                to={menu.linkTo}
+                activeClassName='selected'
+              >
+                <ListItemIcon>
+                  <InboxIcon />
+                </ListItemIcon>
+                <ListItemText primary={menu.name} />
+              </Button>
+            </ListItem>
+          ))}
           {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
             <ListItem button key={text}>
               <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
