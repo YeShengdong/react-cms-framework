@@ -1,10 +1,32 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { uniqueId } from 'lodash';
 import {
   Table, Divider, Tag, Button, Modal,
 } from 'antd';
+import { getArticleList } from '../../../services/article';
 
 function ArticleListPage() {
+  const [tableLoading, setTableLoading] = useState(true);
+  const [articleData, setArticleData] = useState({ list: [] });
+  const [paginationData, setPaginationData] = useState({});
+
+  useEffect(() => {
+    async function loadData() {
+      setTableLoading(true);
+      const res = await getArticleList({
+        pageSize: paginationData.pageSize,
+        currentPage: paginationData.current,
+      });
+
+      setArticleData(res);
+      setPaginationData({ ...paginationData, total: res.total });
+      setTableLoading(false);
+    }
+
+    loadData();
+  }, [paginationData.current]);
+
   const onDeleteClick = (id) => {
     Modal.info({
       title: 'This is a notification message',
@@ -13,26 +35,32 @@ function ArticleListPage() {
           <p>{id}</p>
         </div>
       ),
-      onOk() { },
+      onOk: () => {
+        console.log('ok');
+      },
     });
+  };
+
+  const handleTableChange = (pagination) => {
+    setPaginationData(pagination);
   };
 
   const columns = [
     {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
+      title: 'Title',
+      dataIndex: 'title',
+      key: 'title',
       render: (text) => <Link to="/">{text}</Link>,
     },
     {
-      title: 'Age',
-      dataIndex: 'age',
-      key: 'age',
+      title: 'Author',
+      dataIndex: 'author',
+      key: 'author',
     },
     {
-      title: 'Address',
-      dataIndex: 'address',
-      key: 'address',
+      title: 'Date',
+      dataIndex: 'date',
+      key: 'date',
     },
     {
       title: 'Tags',
@@ -41,12 +69,10 @@ function ArticleListPage() {
       render: (tags) => (
         <span>
           {tags.map((tag) => {
-            let color = tag.length > 5 ? 'geekblue' : 'green';
-            if (tag === 'loser') {
-              color = 'volcano';
-            }
+            const key = uniqueId('tag');
+
             return (
-              <Tag color={color} key={tag}>
+              <Tag color="geekblue" key={key}>
                 {tag.toUpperCase()}
               </Tag>
             );
@@ -63,7 +89,7 @@ function ArticleListPage() {
             <Link to="/">View</Link>
           </Button>
           <Divider type="vertical" />
-          <Button type="danger" onClick={() => onDeleteClick(record.name)}>
+          <Button type="danger" onClick={() => onDeleteClick(record.id)}>
             Delete
           </Button>
         </span>
@@ -71,31 +97,16 @@ function ArticleListPage() {
     },
   ];
 
-  const data = [
-    {
-      key: '1',
-      name: 'John Brown',
-      age: 32,
-      address: 'New York No. 1 Lake Park',
-      tags: ['nice', 'developer'],
-    },
-    {
-      key: '2',
-      name: 'Jim Green',
-      age: 42,
-      address: 'London No. 1 Lake Park',
-      tags: ['loser'],
-    },
-    {
-      key: '3',
-      name: 'Joe Black',
-      age: 32,
-      address: 'Sidney No. 1 Lake Park',
-      tags: ['cool', 'teacher'],
-    },
-  ];
-
-  return <Table columns={columns} dataSource={data} />;
+  return (
+    <Table
+      rowKey="id"
+      loading={tableLoading}
+      columns={columns}
+      dataSource={articleData.list}
+      pagination={paginationData}
+      onChange={handleTableChange}
+    />
+  );
 }
 
 export default ArticleListPage;
