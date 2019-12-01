@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Link } from 'react-router-dom';
 import { uniqueId } from 'lodash';
 import {
   Table, Divider, Tag, Button, Modal,
 } from 'antd';
+import { fetchArticles } from '../../../actions/article';
 import { getArticleList } from '../../../services/article';
 
 function ArticleListPage() {

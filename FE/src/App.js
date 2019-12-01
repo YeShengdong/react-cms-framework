@@ -4,27 +4,33 @@ import {
   Switch,
   Route,
 } from 'react-router-dom';
-import DefaultLayout from './components/ui/layout';
+import { Provider } from 'react-redux';
+import configureStore from '@/store';
+import DefaultLayout from '@/components/ui/layout';
 import {
   HomePage, AboutPage, ArticleListPage,
-} from './pages';
+} from '@/pages';
+
+const { store } = configureStore();
 
 export default function App() {
   return (
     <Router>
-      <DefaultLayout>
-        <Switch>
-          <Route path="/article/list">
-            <ArticleListPage />
-          </Route>
-          <Route path="/about">
-            <AboutPage />
-          </Route>
-          <Route path="/">
-            <HomePage />
-          </Route>
-        </Switch>
-      </DefaultLayout>
+      <Provider store={store}>
+        <DefaultLayout>
+          <Switch>
+            <Route path="/article/list">
+              <ArticleListPage />
+            </Route>
+            <Route path="/about">
+              <AboutPage />
+            </Route>
+            <Route path="/">
+              <HomePage />
+            </Route>
+          </Switch>
+        </DefaultLayout>
+      </Provider>
     </Router>
   );
 }
