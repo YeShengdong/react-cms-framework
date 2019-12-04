@@ -6,8 +6,8 @@ const getArticleList = async (data) => {
     url: 'article/list',
     data,
   });
-
   const dataInfo = get(res, 'data', {});
+
   return dataInfo;
 };
 

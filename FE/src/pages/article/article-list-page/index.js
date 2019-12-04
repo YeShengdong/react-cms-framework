@@ -1,28 +1,22 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useEffect } from 'react';
+import PropsType from 'prop-types';
+import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { uniqueId } from 'lodash';
 import {
   Table, Divider, Tag, Button, Modal,
 } from 'antd';
-import { fetchArticles } from '../../../actions/article';
-import { getArticleList } from '../../../services/article';
+import { fetchArticles, setPagination } from '@src/actions/article';
 
-function ArticleListPage() {
-  const [tableLoading, setTableLoading] = useState(true);
-  const [articleData, setArticleData] = useState({ list: [] });
-  const [paginationData, setPaginationData] = useState({});
+function ArticleListPage(props) {
+  const { list, loading, paginationData } = props;
 
   useEffect(() => {
     async function loadData() {
-      setTableLoading(true);
-      const res = await getArticleList({
+      await props.fetchArticles({
         pageSize: paginationData.pageSize,
         currentPage: paginationData.current,
       });
-
-      setArticleData(res);
-      setPaginationData({ ...paginationData, total: res.total });
-      setTableLoading(false);
     }
 
     loadData();
@@ -43,7 +37,7 @@ function ArticleListPage() {
   };
 
   const handleTableChange = (pagination) => {
-    setPaginationData(pagination);
+    props.setPagination(pagination);
   };
 
   const columns = [
@@ -101,13 +95,49 @@ function ArticleListPage() {
   return (
     <Table
       rowKey="id"
-      loading={tableLoading}
+      loading={loading}
       columns={columns}
-      dataSource={articleData.list}
+      dataSource={list}
       pagination={paginationData}
       onChange={handleTableChange}
     />
   );
 }
 
-export default ArticleListPage;
+ArticleListPage.defaultProps = {
+  loading: false,
+  list: [],
+};
+
+ArticleListPage.propTypes = {
+  loading: PropsType.bool,
+  list: PropsType.arrayOf(PropsType.object),
+  fetchArticles: PropsType.func.isRequired,
+  setPagination: PropsType.func.isRequired,
+  paginationData: PropsType.objectOf(PropsType.any).isRequired,
+};
+
+const mapStateToProps = (state, ownProps) => {
+  const { article } = state;
+
+  return {
+    list: article.list,
+    loading: article.loading,
+    paginationData: article.pagination,
+  };
+};
+
+// const mapDispatchToProps = (dispatch, ownProps) => {
+//   console.log('mapDispatchToProps', dispatch);
+//   return {
+//     fetchArticles,
+//   };
+// };
+
+export default connect(
+  mapStateToProps,
+  {
+    fetchArticles,
+    setPagination,
+  },
+)(ArticleListPage);
