@@ -6,7 +6,7 @@ import {
 } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import configureStore from '@src/store';
-import DefaultLayout from '@src/components/ui/layout';
+import DefaultLayout from '@components/ui/layout';
 import {
   HomePage, AboutPage, ArticleListPage,
 } from '@src/pages';

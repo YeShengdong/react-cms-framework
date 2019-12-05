@@ -1,3 +1,5 @@
+const path = require('path');
+
 module.exports = {
     "root": true,
     "env": {
@@ -28,7 +30,8 @@ module.exports = {
       "import/resolver": {
         alias: {
           map: [
-            ['@src', './src/'],
+            ['@src', path.resolve(__dirname, 'src')],
+            ['@components', path.resolve(__dirname, 'src', 'components')]
           ]
         }
       }
