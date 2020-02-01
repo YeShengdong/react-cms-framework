@@ -6,20 +6,18 @@ import { uniqueId } from 'lodash';
 import {
   Table, Divider, Tag, Button, Modal,
 } from 'antd';
-import { fetchArticles, setPagination } from '@src/actions/article';
+import {
+  setPagination as setPaginationAction,
+  getAllArticles as getAllArticlesAction,
+} from '@src/actions/article';
 
 function ArticleListPage(props) {
-  const { list, loading, paginationData } = props;
+  const {
+    list, loading, paginationData, getAllArticles,
+  } = props;
 
   useEffect(() => {
-    async function loadData() {
-      await props.fetchArticles({
-        pageSize: paginationData.pageSize,
-        currentPage: paginationData.current,
-      });
-    }
-
-    loadData();
+    getAllArticles();
   }, [paginationData.current]);
 
   const onDeleteClick = (id) => {
@@ -112,7 +110,7 @@ ArticleListPage.defaultProps = {
 ArticleListPage.propTypes = {
   loading: PropsType.bool,
   list: PropsType.arrayOf(PropsType.object),
-  fetchArticles: PropsType.func.isRequired,
+  getAllArticles: PropsType.func.isRequired,
   setPagination: PropsType.func.isRequired,
   paginationData: PropsType.objectOf(PropsType.any).isRequired,
 };
@@ -130,14 +128,15 @@ const mapStateToProps = (state, ownProps) => {
 // const mapDispatchToProps = (dispatch, ownProps) => {
 //   console.log('mapDispatchToProps', dispatch);
 //   return {
-//     fetchArticles,
+//     dispatch,
 //   };
 // };
 
 export default connect(
   mapStateToProps,
+  // mapDispatchToProps,
   {
-    fetchArticles,
-    setPagination,
+    getAllArticles: getAllArticlesAction,
+    setPagination: setPaginationAction,
   },
 )(ArticleListPage);

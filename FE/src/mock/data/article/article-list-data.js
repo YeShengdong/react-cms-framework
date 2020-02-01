@@ -19,7 +19,7 @@ const articleListData = {
     'tags|1-3': ['@ARTICLETAGS'],
     date: '@datetime',
   }],
-  total: 30,
+  total: 22,
 };
 
 export default articleListData;

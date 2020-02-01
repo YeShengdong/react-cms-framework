@@ -1,9 +1,9 @@
 import {
-  FETCH_ARTICLES,
-  FETCH_ARTICLES_SUCCESS,
-  FETCH_ARTICLES_FAILURE,
+  GET_ALL_ARTICLES,
+  GET_ALL_ARTICLES_SUCCESS,
+  GET_ALL_ARTICLES_FAILURE,
   SET_ARTICLE_PAGINATION,
-} from '@src/constants/action-types';
+} from '@src/actions/article';
 
 const initialState = {
   list: [],
@@ -33,12 +33,12 @@ const initialState = {
 
 const article = (state = initialState, action) => {
   switch (action.type) {
-    case FETCH_ARTICLES: {
-      console.log('FETCH_ARTICLES');
+    case GET_ALL_ARTICLES: {
+      console.log('GET_ALL_ARTICLES');
       return { ...state, loading: true };
     }
-    case FETCH_ARTICLES_SUCCESS: {
-      console.log('FETCH_ARTICLES_SUCCESS');
+    case GET_ALL_ARTICLES_SUCCESS: {
+      console.log('GET_ALL_ARTICLES_SUCCESS');
       const { data: { list, total } } = action;
       const pagination = { ...state.pagination, total };
       return {
@@ -48,7 +48,7 @@ const article = (state = initialState, action) => {
         loading: false,
       };
     }
-    case FETCH_ARTICLES_FAILURE: {
+    case GET_ALL_ARTICLES_FAILURE: {
       return {
         ...state,
         loading: false,
