@@ -10,10 +10,11 @@ import {
   setPagination as setPaginationAction,
   getAllArticles as getAllArticlesAction,
 } from '@src/actions/article';
+import { downloadFile } from '@src/helpers/xlsx-helper';
 
 function ArticleListPage(props) {
   const {
-    list, loading, paginationData, getAllArticles,
+    listData, loading, paginationData, getAllArticles,
   } = props;
 
   useEffect(() => {
@@ -89,27 +90,47 @@ function ArticleListPage(props) {
       ),
     },
   ];
+  /* eslint-disable */
+  const handleDownload = () => {
+    Modal.confirm({
+      title: 'Are you sure download?',
+      content: '',
+      onOk: () => {
+        const downloadOptions = {
+          data: listData,
+        };
+
+        downloadFile(downloadOptions);
+      },
+    });
+  };
 
   return (
-    <Table
-      rowKey="id"
-      loading={loading}
-      columns={columns}
-      dataSource={list}
-      pagination={paginationData}
-      onChange={handleTableChange}
-    />
+    <div>
+      <Button type="primary" icon="download" onClick={handleDownload}>
+        Download
+      </Button>
+      <Table
+        rowKey="id"
+        loading={loading}
+        columns={columns}
+        dataSource={listData}
+        pagination={paginationData}
+        onChange={handleTableChange}
+        scroll={{ y: 600 }}
+      />
+    </div>
   );
 }
 
 ArticleListPage.defaultProps = {
   loading: false,
-  list: [],
+  listData: [],
 };
 
 ArticleListPage.propTypes = {
   loading: PropsType.bool,
-  list: PropsType.arrayOf(PropsType.object),
+  listData: PropsType.arrayOf(PropsType.object),
   getAllArticles: PropsType.func.isRequired,
   setPagination: PropsType.func.isRequired,
   paginationData: PropsType.objectOf(PropsType.any).isRequired,
@@ -119,7 +140,7 @@ const mapStateToProps = (state, ownProps) => {
   const { article } = state;
 
   return {
-    list: article.list,
+    listData: article.listData,
     loading: article.loading,
     paginationData: article.pagination,
   };

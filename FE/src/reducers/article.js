@@ -6,7 +6,7 @@ import {
 } from '@src/actions/article';
 
 const initialState = {
-  list: [],
+  listData: [],
   pagination: {
     current: 1,
     total: 0,
@@ -43,7 +43,7 @@ const article = (state = initialState, action) => {
       const pagination = { ...state.pagination, total };
       return {
         ...state,
-        list,
+        listData: list,
         pagination,
         loading: false,
       };
